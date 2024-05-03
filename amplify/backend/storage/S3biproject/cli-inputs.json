@@ -1,0 +1,14 @@
+{
+  "resourceName": "S3biproject",
+  "policyUUID": "c6dc90c5",
+  "bucketName": "storagebiexcelfiles",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "S3Trigger1c319d6c",
+  "groupAccess": {}
+}
