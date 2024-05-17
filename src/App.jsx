@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Amplify } from 'aws-amplify';
-import { withAuthenticator } from '@aws-amplify/ui-react';
+import { Authenticator } from '@aws-amplify/ui-react';
 import { Loader } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import config from './amplifyconfiguration.json';
 import { uploadData, getUrl, list } from 'aws-amplify/storage';
 import './styles2.css';
 
+import config from './amplifyconfiguration.json';
+// import awsExports from './aws-exports'
 Amplify.configure(config);
 
 const doesFileExist = async (filename) => {
@@ -80,32 +81,36 @@ const App = ({ signOut, user }) => {
   };
 
   return (
-    <div className={`container ${loading ? 'loading' : ''}`}>
-      {loading && (
-        <div className="loading-overlay">
-          <div className="loader-container">
-            <Loader size="large" variation="linear" />
+    <Authenticator hideSignUp>
+      {({ signOut, user }) => (
+        <div className={`container ${loading ? 'loading' : ''}`}>
+          {loading && (
+            <div className="loading-overlay">
+              <div className="loader-container">
+                <Loader size="large" variation="linear" />
+              </div>
+            </div>
+          )}
+          <div>
+            <label className="file-input-label">
+              Subir Archivo
+              <input type="file" onChange={(event) => uploadDataInBrowser(event)} />
+            </label>
           </div>
+          <div>
+            <button onClick={downloadFormat} className="button">
+              Descargar Formato Excel
+            </button>
+          </div>
+          <h2>Sistema de Estimación de Factibilides</h2>
+          <button onClick={signOut} className="button">
+            Sign Out
+          </button>
+          <div className="myElementWithBackground">{/* Contenido del componente */}</div>
         </div>
       )}
-      <div>
-        <label className="file-input-label">
-          Subir Archivo
-          <input type="file" onChange={(event) => uploadDataInBrowser(event)} />
-        </label>
-      </div>
-      <div>
-        <button onClick={downloadFormat} className="button">
-          Descargar Formato Excel
-        </button>
-      </div>
-      <h2>Sistema de Estimación de Factibilides</h2>
-      <button onClick={signOut} className="button">
-        Sign Out
-      </button>
-      <div className="myElementWithBackground">{/* Contenido del componente */}</div>
-    </div>
+    </Authenticator>
   );
 };
 
-export default withAuthenticator(App);
+export default App;
