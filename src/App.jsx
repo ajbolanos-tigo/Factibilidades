@@ -6,6 +6,9 @@ import '@aws-amplify/ui-react/styles.css';
 import { uploadData, getUrl, list } from 'aws-amplify/storage';
 import './styles2.css';
 
+//Formulario factis unitaria 
+import FactiUnitaria from './assets/Forms/FormularioFactisU';
+
 import config from './amplifyconfiguration.json';
 // import awsExports from './aws-exports'
 Amplify.configure(config);
@@ -106,6 +109,10 @@ const App = ({ signOut, user }) => {
           <button onClick={signOut} className="button">
             Sign Out
           </button>
+          <button className="button">
+            Factibilidades unitarias
+          </button>
+          <FactiUnitaria/>
           <div className="myElementWithBackground">{/* Contenido del componente */}</div>
         </div>
       )}
