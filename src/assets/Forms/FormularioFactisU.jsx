@@ -100,7 +100,7 @@ const FactiUnitaria = ({ onClose }) => {
                             <option value="si">Yes</option>
                         </SelectField>
                         <SelectField
-                            label="Medio"
+                            label="Product type"
                             name="medio"
                             onChange={handleChange}
                             onBlur={handleBlur}
