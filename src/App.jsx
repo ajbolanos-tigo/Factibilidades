@@ -33,6 +33,16 @@ const doesFileExist = async (filename) => {
 const App = ({ signOut, user }) => {
   const [downloading, setDownloading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isFormActive, setIsFormActive] = useState(false);
+
+  const activateForm = () => setIsFormActive(true);
+  const deactivateForm = () => setIsFormActive(false);
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      deactivateForm();
+    }
+  };
 
   const uploadDataInBrowser = async (event) => {
     if (event?.target?.files) {
@@ -92,40 +102,47 @@ const App = ({ signOut, user }) => {
   return (
     <Authenticator hideSignUp>
       {({ signOut, user }) => (
-        <div className={`container ${loading ? 'loading' : ''}`}>
-          {loading && (
-            <LoaderFactis />
-          )}
-          <Image
-            alt="Tigo logo"
-            src="src/Logo_Tigo.svg"
-            objectFit="initial"
-            objectPosition="50% 50%"
-            backgroundColor="initial"
-            width="75px"
-            height="54px"
-            opacity="100%"
-          />
-          <h2>Sistema de Estimación de Factibilides</h2>
-          <div style={appStyles.flexContanier}>
-            <Flex direction="column" style={appStyles.flex}>
-              <Button onClick={downloadFormat} className="button">
-                Descargar Formato Excel
-              </Button>
-              <label className="file-input-label">
-                Subir Archivo
-                <input type="file" onChange={(event) => uploadDataInBrowser(event)} />
-              </label>
-              <Button className="button">
-                Factibilidades unitarias
-              </Button>
-              <Button onClick={signOut} className="button">
-                Sign Out
-              </Button>
-            </Flex>
+        <>
+          <div className={`container ${loading ? 'loading' : ''} ${isFormActive ? 'blur' : ''}`}>
+            {loading && (
+              <LoaderFactis />
+            )}
+            <Image
+              alt="Tigo logo"
+              src="src/Logo_Tigo.svg"
+              objectFit="initial"
+              objectPosition="50% 50%"
+              backgroundColor="initial"
+              width="75px"
+              height="54px"
+              opacity="100%"
+            />
+            <h2>Sistema de Estimación de Factibilides</h2>
+            <div style={appStyles.flexContanier}>
+              <Flex direction="column" style={appStyles.flex}>
+                <Button onClick={downloadFormat} className="button">
+                  Descargar Formato Excel
+                </Button>
+                <label className="file-input-label">
+                  Subir Archivo
+                  <input type="file" onChange={(event) => uploadDataInBrowser(event)} />
+                </label>
+                <Button className="button" onClick={activateForm}>
+                  Factibilidades unitarias
+                </Button>
+                <Button onClick={signOut} className="button">
+                  Sign Out
+                </Button>
+              </Flex>
+            </div>
+            {/* <div className="myElementWithBackground">Contenido del componente</div> */}
           </div>
-          {/* <div className="myElementWithBackground">Contenido del componente</div> */}
-        </div>
+          {isFormActive && (
+            <div className="form-overlay" onClick={handleOverlayClick}>
+              <FactiUnitaria onClose={deactivateForm} />
+            </div>
+          )}
+        </>
       )}
     </Authenticator>
   );

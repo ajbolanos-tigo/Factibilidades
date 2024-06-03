@@ -7,7 +7,7 @@ import { formSchema } from "../schemas";
 import "./styles.css"
 import { styles } from "./styles";
 
-const FactiUnitaria = () => {
+const FactiUnitaria = ({ onClose }) => {
     const validate = values => {
         const errors = {};
         if (!values.lat) errors.lat = 'Required';
@@ -21,9 +21,11 @@ const FactiUnitaria = () => {
             lon: '',
             building: 'no',
             speed: '',
+            medio: 'GPON',
         },
         validationSchema: formSchema,
         onSubmit: values => {
+            onClose()
             alert(JSON.stringify(values, null, 2));
         }
     });
@@ -89,19 +91,27 @@ const FactiUnitaria = () => {
                     >
                         <SelectField
                             label="Building"
+                            name="building"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.building}
                         >
                             <option value="no">No</option>
                             <option value="si">Yes</option>
                         </SelectField>
                         <SelectField
                             label="Medio"
+                            name="medio"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.medio}
                         >
                             <option value="GPON">GPON</option>
                         </SelectField>
                     </Grid>
                 </Flex>
                 <Grid templateColumns="1fr 1fr" style={styles.buttonsArea}>
-                    <Button variation="primary" colorTheme="error" style={styles.cancelButton}>Cancel</Button>
+                    <Button variation="primary" colorTheme="error" style={styles.cancelButton} onClick={onClose}>Cancel</Button>
                     <Button variation="primary" type="submit" style={styles.submitButton}>Submit</Button>
                 </Grid>
             </form>
