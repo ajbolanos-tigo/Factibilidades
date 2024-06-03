@@ -71,7 +71,7 @@ const FactiUnitaria = () => {
                         <Input
                             id="speed"
                             name="speed"
-                            placeholder="Latitude"
+                            placeholder="Bandwidth"
                             type="number"
                             onChange={handleChange}
                             onBlur={handleBlur}

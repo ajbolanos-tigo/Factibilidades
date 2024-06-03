@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { Amplify } from 'aws-amplify';
-import { Authenticator } from '@aws-amplify/ui-react';
-import { Loader } from '@aws-amplify/ui-react';
+import { Authenticator, Button, Flex } from '@aws-amplify/ui-react';
+import { Loader, Image } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { uploadData, getUrl, list } from 'aws-amplify/storage';
+
+//Estilos
 import './styles2.css';
+import { appStyles } from './styles';
 
 //Formulario factis unitaria 
 import FactiUnitaria from './assets/Forms/FormularioFactisU';
+
+//Loader factis
+import LoaderFactis from './assets/Loader/Loader';
 
 import config from './amplifyconfiguration.json';
 // import awsExports from './aws-exports'
@@ -86,34 +92,38 @@ const App = ({ signOut, user }) => {
   return (
     <Authenticator hideSignUp>
       {({ signOut, user }) => (
+        // <LoaderFactis/>
         <div className={`container ${loading ? 'loading' : ''}`}>
-          {loading && (
-            <div className="loading-overlay">
-              <div className="loader-container">
-                <Loader size="large" variation="linear" />
-              </div>
-            </div>
-          )}
-          <div>
-            <label className="file-input-label">
-              Subir Archivo
-              <input type="file" onChange={(event) => uploadDataInBrowser(event)} />
-            </label>
-          </div>
-          <div>
-            <button onClick={downloadFormat} className="button">
-              Descargar Formato Excel
-            </button>
-          </div>
+          <Image
+            alt="Amplify logo"
+            src="src/Logo_Tigo.svg"
+            objectFit="initial"
+            objectPosition="50% 50%"
+            backgroundColor="initial"
+            width="75px"
+            height="54px"
+            opacity="100%"
+            onClick={() => alert('📸 Say cheese!')}
+          />
           <h2>Sistema de Estimación de Factibilides</h2>
-          <button onClick={signOut} className="button">
-            Sign Out
-          </button>
-          <button className="button">
-            Factibilidades unitarias
-          </button>
-          <FactiUnitaria/>
-          <div className="myElementWithBackground">{/* Contenido del componente */}</div>
+          <div style={appStyles.flexContanier}>
+            <Flex direction="column" style={appStyles.flex}>
+              <Button onClick={downloadFormat} className="button">
+                Descargar Formato Excel
+              </Button>
+              <label className="file-input-label">
+                Subir Archivo
+                <input type="file" onChange={(event) => uploadDataInBrowser(event)} />
+              </label>
+              <Button className="button">
+                Factibilidades unitarias
+              </Button>
+              <Button onClick={signOut} className="button">
+                Sign Out
+              </Button>
+            </Flex>
+          </div>
+          {/* <div className="myElementWithBackground">Contenido del componente</div> */}
         </div>
       )}
     </Authenticator>
