@@ -92,10 +92,12 @@ const App = ({ signOut, user }) => {
   return (
     <Authenticator hideSignUp>
       {({ signOut, user }) => (
-        // <LoaderFactis/>
         <div className={`container ${loading ? 'loading' : ''}`}>
+          {loading && (
+            <LoaderFactis />
+          )}
           <Image
-            alt="Amplify logo"
+            alt="Tigo logo"
             src="src/Logo_Tigo.svg"
             objectFit="initial"
             objectPosition="50% 50%"
@@ -103,7 +105,6 @@ const App = ({ signOut, user }) => {
             width="75px"
             height="54px"
             opacity="100%"
-            onClick={() => alert('📸 Say cheese!')}
           />
           <h2>Sistema de Estimación de Factibilides</h2>
           <div style={appStyles.flexContanier}>
