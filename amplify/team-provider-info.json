@@ -35,17 +35,13 @@
           "deploymentBucketName": "amplify-reactamplified-dev-185352-deployment",
           "s3Key": "amplify-builds/S3Triggera127704e-624b364b5468686d5a35-build.zip"
         },
-        "itemsFactis": {
-          "deploymentBucketName": "amplify-reactamplified-dev-185352-deployment",
-          "s3Key": "amplify-builds/itemsFactis-50436f78623751673441-build.zip"
-        }
+        "itemsFactis": {}
       },
       "storage": {
         "S3biproject": {}
       },
       "api": {
-        "reactamplified": {},
-        "itemsFactis": {}
+        "reactamplified": {}
       }
     }
   }

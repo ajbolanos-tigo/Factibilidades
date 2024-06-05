@@ -15,6 +15,9 @@ import FactiUnitaria from './assets/Forms/FormularioFactisU';
 //Loader factis
 import LoaderFactis from './assets/Loader/Loader';
 
+//APIs
+import { post } from 'aws-amplify/api';
+
 import config from './amplifyconfiguration.json';
 // import awsExports from './aws-exports'
 Amplify.configure(config);
@@ -29,6 +32,28 @@ const doesFileExist = async (filename) => {
     return false;
   }
 };
+
+const postest = async () => {
+  try {
+    const restOperation = post({
+      apiName: 'itemsFactis',
+      path: '/items',
+      options: {
+        body: {
+          message: 'Mow the lawn'
+        }
+      }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+
+    console.log('POST call succeeded');
+    console.log(response);
+  } catch (e) {
+    console.log('POST call failed: ', JSON.parse(e.response.body));
+  }
+}
 
 const App = ({ signOut, user }) => {
   const [downloading, setDownloading] = useState(false);
@@ -132,6 +157,9 @@ const App = ({ signOut, user }) => {
                 </Button>
                 <Button onClick={signOut} className="button">
                   Sign Out
+                </Button>
+                <Button onClick={postest} className='button'>
+                  test
                 </Button>
               </Flex>
             </div>

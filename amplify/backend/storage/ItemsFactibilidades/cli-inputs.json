@@ -1,0 +1,14 @@
+{
+  "resourceName": "ItemsFactibilidades",
+  "tableName": "ItemsFactibilidades",
+  "partitionKey": {
+    "fieldName": "username",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "formId-createdAt",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

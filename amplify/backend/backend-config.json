@@ -75,6 +75,20 @@
     },
     "itemsFactis": {
       "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "ItemsFactibilidades"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
@@ -135,22 +149,6 @@
         }
       ]
     },
-    "AMPLIFY_function_itemsFactis_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "itemsFactis"
-        }
-      ]
-    },
-    "AMPLIFY_function_itemsFactis_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "itemsFactis"
-        }
-      ]
-    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {
@@ -169,6 +167,10 @@
     }
   },
   "storage": {
+    "ItemsFactibilidades": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
     "S3biproject": {
       "dependsOn": [
         {

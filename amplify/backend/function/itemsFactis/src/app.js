@@ -8,10 +8,30 @@ See the License for the specific language governing permissions and limitations 
 
 
 
-
-const express = require('express')
-const bodyParser = require('body-parser')
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DeleteCommand, DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const bodyParser = require('body-parser')
+const express = require('express')
+
+const ddbClient = new DynamoDBClient({ region: process.env.TABLE_REGION });
+const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
+
+let tableName = "ItemsFactibilidades";
+if (process.env.ENV && process.env.ENV !== "NONE") {
+  tableName = tableName + '-' + process.env.ENV;
+}
+
+const userIdPresent = false; // TODO: update in case is required to use that definition
+const partitionKeyName = "username";
+const partitionKeyType = "S";
+const sortKeyName = "formId-createdAt";
+const sortKeyType = "S";
+const hasSortKey = sortKeyName !== "";
+const path = "/items";
+const UNAUTH = 'UNAUTH';
+const hashKeyPath = '/:' + partitionKeyName;
+const sortKeyPath = hasSortKey ? '/:' + sortKeyName : '';
 
 // declare a new express app
 const app = express()
@@ -25,65 +45,203 @@ app.use(function(req, res, next) {
   next()
 });
 
+// convert url string param to expected Type
+const convertUrlType = (param, type) => {
+  switch(type) {
+    case "N":
+      return Number.parseInt(param);
+    default:
+      return param;
+  }
+}
 
-/**********************
- * Example get method *
- **********************/
+/************************************
+* HTTP Get method to list objects *
+************************************/
 
-app.get('/items', function(req, res) {
-  // Add your code here
-  res.json({success: 'get call succeed!', url: req.url});
+app.get(path, async function(req, res) {
+  var params = {
+    TableName: tableName,
+    Select: 'ALL_ATTRIBUTES',
+  };
+
+  try {
+    const data = await ddbDocClient.send(new ScanCommand(params));
+    res.json(data.Items);
+  } catch (err) {
+    res.statusCode = 500;
+    res.json({error: 'Could not load items: ' + err.message});
+  }
 });
 
-app.get('/items/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'get call succeed!', url: req.url});
+/************************************
+ * HTTP Get method to query objects *
+ ************************************/
+
+app.get(path + hashKeyPath, async function(req, res) {
+  const condition = {}
+  condition[partitionKeyName] = {
+    ComparisonOperator: 'EQ'
+  }
+
+  if (userIdPresent && req.apiGateway) {
+    condition[partitionKeyName]['AttributeValueList'] = [req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH ];
+  } else {
+    try {
+      condition[partitionKeyName]['AttributeValueList'] = [ convertUrlType(req.params[partitionKeyName], partitionKeyType) ];
+    } catch(err) {
+      res.statusCode = 500;
+      res.json({error: 'Wrong column type ' + err});
+    }
+  }
+
+  let queryParams = {
+    TableName: tableName,
+    KeyConditions: condition
+  }
+
+  try {
+    const data = await ddbDocClient.send(new QueryCommand(queryParams));
+    res.json(data.Items);
+  } catch (err) {
+    res.statusCode = 500;
+    res.json({error: 'Could not load items: ' + err.message});
+  }
 });
 
-/****************************
-* Example post method *
-****************************/
+/*****************************************
+ * HTTP Get method for get single object *
+ *****************************************/
 
-app.post('/items', function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
+app.get(path + '/object' + hashKeyPath + sortKeyPath, async function(req, res) {
+  const params = {};
+  if (userIdPresent && req.apiGateway) {
+    params[partitionKeyName] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  } else {
+    params[partitionKeyName] = req.params[partitionKeyName];
+    try {
+      params[partitionKeyName] = convertUrlType(req.params[partitionKeyName], partitionKeyType);
+    } catch(err) {
+      res.statusCode = 500;
+      res.json({error: 'Wrong column type ' + err});
+    }
+  }
+  if (hasSortKey) {
+    try {
+      params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
+    } catch(err) {
+      res.statusCode = 500;
+      res.json({error: 'Wrong column type ' + err});
+    }
+  }
+
+  let getItemParams = {
+    TableName: tableName,
+    Key: params
+  }
+
+  try {
+    const data = await ddbDocClient.send(new GetCommand(getItemParams));
+    if (data.Item) {
+      res.json(data.Item);
+    } else {
+      res.json(data) ;
+    }
+  } catch (err) {
+    res.statusCode = 500;
+    res.json({error: 'Could not load items: ' + err.message});
+  }
 });
 
-app.post('/items/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
+
+/************************************
+* HTTP put method for insert object *
+*************************************/
+
+app.put(path, async function(req, res) {
+
+  if (userIdPresent) {
+    req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  }
+
+  let putItemParams = {
+    TableName: tableName,
+    Item: req.body
+  }
+  try {
+    let data = await ddbDocClient.send(new PutCommand(putItemParams));
+    res.json({ success: 'put call succeed!', url: req.url, data: data })
+  } catch (err) {
+    res.statusCode = 500;
+    res.json({ error: err, url: req.url, body: req.body });
+  }
 });
 
-/****************************
-* Example put method *
-****************************/
+/************************************
+* HTTP post method for insert object *
+*************************************/
 
-app.put('/items', function(req, res) {
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
+app.post(path, async function(req, res) {
+
+  if (userIdPresent) {
+    req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  }
+
+  let putItemParams = {
+    TableName: tableName,
+    Item: req.body
+  }
+  try {
+    let data = await ddbDocClient.send(new PutCommand(putItemParams));
+    res.json({ success: 'post call succeed!', url: req.url, data: data })
+  } catch (err) {
+    res.statusCode = 500;
+    res.json({ error: err, url: req.url, body: req.body });
+  }
 });
 
-app.put('/items/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
-});
+/**************************************
+* HTTP remove method to delete object *
+***************************************/
 
-/****************************
-* Example delete method *
-****************************/
+app.delete(path + '/object' + hashKeyPath + sortKeyPath, async function(req, res) {
+  const params = {};
+  if (userIdPresent && req.apiGateway) {
+    params[partitionKeyName] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  } else {
+    params[partitionKeyName] = req.params[partitionKeyName];
+     try {
+      params[partitionKeyName] = convertUrlType(req.params[partitionKeyName], partitionKeyType);
+    } catch(err) {
+      res.statusCode = 500;
+      res.json({error: 'Wrong column type ' + err});
+    }
+  }
+  if (hasSortKey) {
+    try {
+      params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
+    } catch(err) {
+      res.statusCode = 500;
+      res.json({error: 'Wrong column type ' + err});
+    }
+  }
 
-app.delete('/items', function(req, res) {
-  // Add your code here
-  res.json({success: 'delete call succeed!', url: req.url});
-});
+  let removeItemParams = {
+    TableName: tableName,
+    Key: params
+  }
 
-app.delete('/items/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'delete call succeed!', url: req.url});
+  try {
+    let data = await ddbDocClient.send(new DeleteCommand(removeItemParams));
+    res.json({url: req.url, data: data});
+  } catch (err) {
+    res.statusCode = 500;
+    res.json({error: err, url: req.url});
+  }
 });
 
 app.listen(3000, function() {
-    console.log("App started")
+  console.log("App started")
 });
 
 // Export the app object. When executing the application local this does nothing. However,
