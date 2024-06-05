@@ -149,6 +149,22 @@
         }
       ]
     },
+    "AMPLIFY_function_itemsFactis_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "itemsFactis"
+        }
+      ]
+    },
+    "AMPLIFY_function_itemsFactis_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "itemsFactis"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {
