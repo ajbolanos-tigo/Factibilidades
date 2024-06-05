@@ -33,28 +33,6 @@ const doesFileExist = async (filename) => {
   }
 };
 
-const postest = async () => {
-  try {
-    const restOperation = post({
-      apiName: 'itemsFactis',
-      path: '/items',
-      options: {
-        body: {
-          message: 'Mow the lawn'
-        }
-      }
-    });
-
-    const { body } = await restOperation.response;
-    const response = await body.json();
-
-    console.log('POST call succeeded');
-    console.log(response);
-  } catch (e) {
-    console.log('POST call failed: ', JSON.parse(e.response.body));
-  }
-}
-
 const App = ({ signOut, user }) => {
   const [downloading, setDownloading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -158,16 +136,13 @@ const App = ({ signOut, user }) => {
                 <Button onClick={signOut} className="button">
                   Sign Out
                 </Button>
-                <Button onClick={postest} className='button'>
-                  test
-                </Button>
               </Flex>
             </div>
             {/* <div className="myElementWithBackground">Contenido del componente</div> */}
           </div>
           {isFormActive && (
             <div className="form-overlay" onClick={handleOverlayClick}>
-              <FactiUnitaria onClose={deactivateForm} />
+              <FactiUnitaria onClose={deactivateForm} user={user} />
             </div>
           )}
         </>

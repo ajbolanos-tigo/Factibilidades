@@ -6,7 +6,7 @@
     "fieldType": "string"
   },
   "sortKey": {
-    "fieldName": "formId-createdAt",
+    "fieldName": "createdAt",
     "fieldType": "string"
   },
   "gsi": [],

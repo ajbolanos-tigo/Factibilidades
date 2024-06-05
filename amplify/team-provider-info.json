@@ -37,7 +37,7 @@
         },
         "itemsFactis": {
           "deploymentBucketName": "amplify-reactamplified-dev-185352-deployment",
-          "s3Key": "amplify-builds/itemsFactis-62557351783137712f6e-build.zip"
+          "s3Key": "amplify-builds/itemsFactis-514d6a35524554376343-build.zip"
         }
       },
       "storage": {

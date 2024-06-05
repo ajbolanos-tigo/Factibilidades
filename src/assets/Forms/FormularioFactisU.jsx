@@ -7,13 +7,18 @@ import { formSchema } from "../schemas";
 import "./styles.css"
 import { styles } from "./styles";
 
-const FactiUnitaria = ({ onClose }) => {
+const FactiUnitaria = ({ onClose, user }) => {
     const validate = values => {
         const errors = {};
         if (!values.lat) errors.lat = 'Required';
         if (!values.lon) errors.lon = 'Required';
         return errors;
     };
+
+    const getSortKey = () => {
+        const timestamp = new Date().toISOString();
+        return timestamp
+    }
 
     const { handleBlur, handleChange, handleSubmit, touched, values, errors } = useFormik({
         initialValues: {
@@ -22,9 +27,12 @@ const FactiUnitaria = ({ onClose }) => {
             building: 'no',
             speed: '',
             medio: 'GPON',
+            username: user.username,
+            sortKey: '',
         },
         validationSchema: formSchema,
         onSubmit: values => {
+            values.sortKey = getSortKey()
             onClose()
             alert(JSON.stringify(values, null, 2));
         }
