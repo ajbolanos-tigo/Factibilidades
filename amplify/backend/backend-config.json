@@ -1,5 +1,19 @@
 {
   "api": {
+    "itemsFactis": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "itemsFactis"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "reactamplified": {
       "dependsOn": [],
       "output": {
@@ -58,6 +72,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "itemsFactis": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "hosting": {
@@ -113,6 +132,22 @@
         {
           "category": "function",
           "resourceName": "S3Triggera127704e"
+        }
+      ]
+    },
+    "AMPLIFY_function_itemsFactis_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "itemsFactis"
+        }
+      ]
+    },
+    "AMPLIFY_function_itemsFactis_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "itemsFactis"
         }
       ]
     },

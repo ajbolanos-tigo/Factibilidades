@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-reactamplified-dev-185352-unauthRole",
       "StackName": "amplify-reactamplified-dev-185352",
       "StackId": "arn:aws:cloudformation:us-east-1:129043810725:stack/amplify-reactamplified-dev-185352/bce27bb0-a5e4-11ee-82e8-127fe872d015",
-      "AmplifyAppId": "d30agn26iawfec"
+      "AmplifyAppId": "d30agn26iawfec",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-reactamplified-dev-185352-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
@@ -33,13 +34,18 @@
         "S3Triggera127704e": {
           "deploymentBucketName": "amplify-reactamplified-dev-185352-deployment",
           "s3Key": "amplify-builds/S3Triggera127704e-624b364b5468686d5a35-build.zip"
+        },
+        "itemsFactis": {
+          "deploymentBucketName": "amplify-reactamplified-dev-185352-deployment",
+          "s3Key": "amplify-builds/itemsFactis-50436f78623751673441-build.zip"
         }
       },
       "storage": {
         "S3biproject": {}
       },
       "api": {
-        "reactamplified": {}
+        "reactamplified": {},
+        "itemsFactis": {}
       }
     }
   }
