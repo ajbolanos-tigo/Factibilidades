@@ -22,19 +22,19 @@ const FactiUnitaria = ({ onClose, user }) => {
 
     const { handleBlur, handleChange, handleSubmit, touched, values, errors } = useFormik({
         initialValues: {
-            lat: '',
-            lon: '',
-            building: 'no',
-            speed: '',
-            medio: 'GPON',
             username: user.username,
-            sortKey: '',
+            createdAt: '',
+            latitude: '',
+            longitude: '',
+            building: 'no',
+            bandwidth: '',
+            productType: 'GPON',
         },
         validationSchema: formSchema,
         onSubmit: values => {
-            values.sortKey = getSortKey()
+            values.createdAt = getSortKey()
             onClose()
-            alert(JSON.stringify(values, null, 2));
+            console.log(JSON.stringify(values, null, 2));
         }
     });
 
@@ -43,53 +43,53 @@ const FactiUnitaria = ({ onClose, user }) => {
             <form onSubmit={handleSubmit}>
                 <Flex direction="column" gap="small">
                     <div>
-                        <Label htmlFor="lat">Latitude</Label>
+                        <Label htmlFor="latitude">Latitude</Label>
                         <Input
-                            id="lat"
-                            name="lat"
+                            id="latitude"
+                            name="latitude"
                             placeholder="Latitude"
                             type="number"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.lat}
-                            hasError={errors.lat && touched.lat}
+                            value={values.latitude}
+                            hasError={errors.latitude && touched.latitude}
                         />
-                        {touched.lat && errors.lat ? (
-                            <div style={styles.errorMgs}>{errors.lat}</div>
+                        {touched.latitude && errors.latitude ? (
+                            <div style={styles.errorMgs}>{errors.latitude}</div>
                         ) : null}
                     </div>
 
                     <div>
-                        <Label htmlFor="lon">Longitude</Label>
+                        <Label htmlFor="longitude">Longitude</Label>
                         <Input
-                            id="lon"
-                            name="lon"
+                            id="longitude"
+                            name="longitude"
                             placeholder="Longitude"
                             type="number"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.lon}
-                            hasError={errors.lon && touched.lon}
+                            value={values.longitude}
+                            hasError={errors.longitude && touched.longitude}
                         />
-                        {touched.lon && errors.lon ? (
-                            <div style={styles.errorMgs}>{errors.lon}</div>
+                        {touched.longitude && errors.longitude ? (
+                            <div style={styles.errorMgs}>{errors.longitude}</div>
                         ) : null}
                     </div>
 
                     <div>
-                        <Label htmlFor="speed">Bandwidth (mb)</Label>
+                        <Label htmlFor="bandwidth">Bandwidth (mb)</Label>
                         <Input
-                            id="speed"
-                            name="speed"
+                            id="bandwidth"
+                            name="bandwidth"
                             placeholder="Bandwidth"
                             type="number"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.speed}
-                            hasError={errors.speed && touched.speed}
+                            value={values.bandwidth}
+                            hasError={errors.bandwidth && touched.bandwidth}
                         />
-                        {touched.speed && errors.speed ? (
-                            <div style={styles.errorMgs}>{errors.speed}</div>
+                        {touched.bandwidth && errors.bandwidth ? (
+                            <div style={styles.errorMgs}>{errors.bandwidth}</div>
                         ) : null}
                     </div>
 
@@ -109,10 +109,10 @@ const FactiUnitaria = ({ onClose, user }) => {
                         </SelectField>
                         <SelectField
                             label="Product type"
-                            name="medio"
+                            name="productType"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.medio}
+                            value={values.productType}
                         >
                             <option value="GPON">GPON</option>
                         </SelectField>
