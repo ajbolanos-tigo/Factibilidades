@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Amplify } from 'aws-amplify';
 import { Authenticator, Button, Flex } from '@aws-amplify/ui-react';
 import { Loader, Image } from '@aws-amplify/ui-react';
@@ -16,7 +16,7 @@ import FactiUnitaria from './assets/Forms/FormularioFactisU';
 import LoaderFactis from './assets/Loader/Loader';
 
 //APIs
-import { post } from 'aws-amplify/api';
+import { get } from 'aws-amplify/api';
 
 import config from './amplifyconfiguration.json';
 // import awsExports from './aws-exports'
@@ -37,6 +37,27 @@ const App = ({ signOut, user }) => {
   const [downloading, setDownloading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isFormActive, setIsFormActive] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const restOperation = get({
+          apiName: 'itemsFactis',
+          path: '/items'
+        });
+        const response = await restOperation.response;
+        const reader = response.body.getReader();
+        const { value } = await reader.read();
+        const text = new TextDecoder("utf-8").decode(value);
+        const data = JSON.parse(text);
+        
+        console.log('GET call succeeded: ', data);
+      } catch (e) {
+        console.log('GET call failed: ', JSON.parse(e.response.body));
+      }
+    }
+    fetchData()
+  }, [])
 
   const activateForm = () => setIsFormActive(true);
   const deactivateForm = () => setIsFormActive(false);

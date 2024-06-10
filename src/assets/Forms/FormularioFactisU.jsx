@@ -3,6 +3,9 @@ import { useFormik } from "formik";
 import { Button, Card, Flex, Grid, Input, Label, SelectField } from "@aws-amplify/ui-react";
 import { formSchema } from "../schemas";
 
+//APIs
+import { post } from 'aws-amplify/api';
+
 //Style
 import "./styles.css"
 import { styles } from "./styles";
@@ -14,6 +17,31 @@ const FactiUnitaria = ({ onClose, user }) => {
         if (!values.lon) errors.lon = 'Required';
         return errors;
     };
+
+    const createItem = async (values) => {
+        console.log(values)
+        try {
+            const restOperation = post({
+                apiName: 'itemsFactis',
+                path: '/items',
+                options: {
+                    body: values,
+                }
+            });
+
+            const { body } = await restOperation.response;
+            const response = await body.json();
+
+            console.log('POST call succeeded');
+            console.log(response)
+        } catch (e) {
+            try {
+                console.error('POST call failed:', JSON.parse(e.response.body));
+            } catch (parseError) {
+                console.error('POST call failed, error parsing response:', e);
+            }
+        }
+    }
 
     const getSortKey = () => {
         const timestamp = new Date().toISOString();
@@ -28,13 +56,13 @@ const FactiUnitaria = ({ onClose, user }) => {
             longitude: '',
             building: 'no',
             bandwidth: '',
-            productType: 'GPON',
+            productType: 'gpon',
         },
         validationSchema: formSchema,
         onSubmit: values => {
             values.createdAt = getSortKey()
             onClose()
-            console.log(JSON.stringify(values, null, 2));
+            createItem(values)
         }
     });
 
@@ -114,7 +142,7 @@ const FactiUnitaria = ({ onClose, user }) => {
                             onBlur={handleBlur}
                             value={values.productType}
                         >
-                            <option value="GPON">GPON</option>
+                            <option value="gpon">GPON</option>
                         </SelectField>
                     </Grid>
                 </Flex>
