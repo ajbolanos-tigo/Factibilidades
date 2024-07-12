@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Amplify } from 'aws-amplify';
-import { Authenticator, Button, Flex } from '@aws-amplify/ui-react';
+import { Alert, Authenticator, Button, Flex } from '@aws-amplify/ui-react';
 import { Loader, Image } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { uploadData, getUrl, list } from 'aws-amplify/storage';
@@ -19,6 +19,7 @@ import LoaderFactis from './assets/Loader/Loader';
 import { get } from 'aws-amplify/api';
 
 import config from './amplifyconfiguration.json';
+import DataForm from './assets/DataForm/DataForm';
 // import awsExports from './aws-exports'
 Amplify.configure(config);
 
@@ -37,36 +38,59 @@ const App = ({ signOut, user }) => {
   const [downloading, setDownloading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isFormActive, setIsFormActive] = useState(false);
+  const [isDataFormActive, setIsDataFormActive] = useState(false);
+  const [dataForm, setDataForm] = useState({})
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const restOperation = get({
-          apiName: 'itemsFactis',
-          path: '/items'
-        });
-        const response = await restOperation.response;
-        const reader = response.body.getReader();
-        const { value } = await reader.read();
-        const text = new TextDecoder("utf-8").decode(value);
-        const data = JSON.parse(text);
-        
-        console.log('GET call succeeded: ', data);
-      } catch (e) {
-        console.log('GET call failed: ', JSON.parse(e.response.body));
-      }
-    }
-    fetchData()
-  }, [])
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const restOperation = get({
+  //         apiName: 'itemsFactis',
+  //         path: '/items'
+  //       });
+  //       const response = await restOperation.response;
+  //       // const reader = response.body.getReader();
+  //       // const { value } = await reader.read();
+  //       // const text = new TextDecoder("utf-8").decode(value);
+  //       // const data = JSON.parse(text);
+
+  //       // ...
+  //       const { body } = response;
+  //       // consume as a string:
+  //       // const str = await body.text();
+  //       // // OR consume as a blob:
+  //       // const blob = await body.blob();
+  //       // // OR consume as a JSON:
+  //       const json = await body.json();
+
+  //       console.log('GET call succeeded: ', response);
+  //       // console.log('GET call succeeded: ', str);
+  //       // console.log('GET call succeeded: ', blob);
+  //       console.log('GET call succeeded: ', json);
+  //     } catch (e) {
+  //       console.log('GET call failed: ', JSON.parse(e.response.body));
+  //     }
+  //   }
+  //   fetchData()
+  // }, [])
 
   const activateForm = () => setIsFormActive(true);
   const deactivateForm = () => setIsFormActive(false);
+
+  const activateDataForm = () => setIsDataFormActive(true);
+  const deactivateDataForm = () => setIsDataFormActive(false);
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       deactivateForm();
     }
   };
+
+  const handleDataForm = obj => {
+    setDataForm({ ...obj })
+    // activateDataForm()
+    console.log(obj)
+  }
 
   const uploadDataInBrowser = async (event) => {
     if (event?.target?.files) {
@@ -163,9 +187,17 @@ const App = ({ signOut, user }) => {
           </div>
           {isFormActive && (
             <div className="form-overlay" onClick={handleOverlayClick}>
-              <FactiUnitaria onClose={deactivateForm} user={user} />
+              <FactiUnitaria handleDataForm={handleDataForm} onClose={deactivateForm} user={user} />
             </div>
           )}
+          {isDataFormActive && (
+            <div>
+              <DataForm data={dataForm} onClose={deactivateDataForm} />
+            </div>
+          )}
+          {/* <Alert variation='success' heading='Hola' isDismissible={true} className='alert'>
+            Cool!
+          </Alert> */}
         </>
       )}
     </Authenticator>

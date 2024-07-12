@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import { Button, Card, Flex, Grid, Input, Label, SelectField } from "@aws-amplify/ui-react";
 import { formSchema } from "../schemas";
+import LoaderFactis from "../Loader/Loader"
 
 //APIs
 import { post } from 'aws-amplify/api';
@@ -10,7 +11,9 @@ import { post } from 'aws-amplify/api';
 import "./styles.css"
 import { styles } from "./styles";
 
-const FactiUnitaria = ({ onClose, user }) => {
+const FactiUnitaria = ({ handleDataForm, onClose, user }) => {
+
+    const [loading, setLoading] = useState(false);
     const validate = values => {
         const errors = {};
         if (!values.lat) errors.lat = 'Required';
@@ -19,7 +22,7 @@ const FactiUnitaria = ({ onClose, user }) => {
     };
 
     const createItem = async (values) => {
-        console.log(values)
+        // console.log(values)
         try {
             const restOperation = post({
                 apiName: 'itemsFactis',
@@ -33,7 +36,12 @@ const FactiUnitaria = ({ onClose, user }) => {
             const response = await body.json();
 
             console.log('POST call succeeded');
-            console.log(response)
+            // console.log(response)
+            // console.log(response.item)
+            setLoading(false)
+            onClose()
+            handleDataForm(response.item)
+            // console.log(response.item)
         } catch (e) {
             try {
                 console.error('POST call failed:', JSON.parse(e.response.body));
@@ -52,21 +60,24 @@ const FactiUnitaria = ({ onClose, user }) => {
         initialValues: {
             username: user.username,
             createdAt: '',
-            latitude: '',
-            longitude: '',
+            latitude: '14.601470',
+            longitude: '-90.510154',
             building: 'no',
-            bandwidth: '',
+            bandwidth: '15',
             productType: 'gpon',
         },
         validationSchema: formSchema,
         onSubmit: values => {
+            setLoading(true)
             values.createdAt = getSortKey()
-            onClose()
             createItem(values)
         }
     });
 
-    return (
+    return (<>
+        {loading && (
+            <LoaderFactis />
+        )}
         <Card variation="elevated">
             <form onSubmit={handleSubmit}>
                 <Flex direction="column" gap="small">
@@ -133,7 +144,7 @@ const FactiUnitaria = ({ onClose, user }) => {
                             value={values.building}
                         >
                             <option value="no">No</option>
-                            <option value="si">Yes</option>
+                            <option value="yes">Yes</option>
                         </SelectField>
                         <SelectField
                             label="Product type"
@@ -147,11 +158,12 @@ const FactiUnitaria = ({ onClose, user }) => {
                     </Grid>
                 </Flex>
                 <Grid templateColumns="1fr 1fr" style={styles.buttonsArea}>
-                    <Button variation="primary" colorTheme="error" style={styles.cancelButton} onClick={onClose}>Cancel</Button>
-                    <Button variation="primary" type="submit" style={styles.submitButton}>Submit</Button>
+                    <Button variation="primary" colorTheme="error" style={styles.cancelButton} onClick={onClose} isDisabled={loading}>Cancel</Button>
+                    <Button variation="primary" type="submit" style={styles.submitButton} isDisabled={Object.keys(errors).length > 0 || loading}>Submit</Button>
                 </Grid>
             </form>
         </Card>
+    </>
     );
 };
 

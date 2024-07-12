@@ -108,3 +108,9 @@ body {
   .amplify-image{
     margin-top: 2em;
   }
+
+  .alert{
+    position: absolute;
+    right: auto;
+    bottom: 5%;
+  }
