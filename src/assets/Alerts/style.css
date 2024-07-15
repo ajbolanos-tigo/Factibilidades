@@ -1,0 +1,19 @@
+.alert-container {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre alerts */
+  }
+  
+  .alert {
+    height: 3.5em;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  }
+  
+  .alert-dismissed {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  

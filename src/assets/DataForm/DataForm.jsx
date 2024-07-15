@@ -12,7 +12,7 @@ const IconSave = () => {
     );
 };
 
-const DataForm = ({ data, onClose }) => {
+const DataForm = ({ data, onClose, addAlert }) => {
     const textToCopy = data.aprobado ? `
 --FACTIBILIAD REMOTO GPON-- ${data.mensaje}
 Busqueda producto:
@@ -37,9 +37,10 @@ Bandwidth: ${data.bandwidth}
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(textToCopy).then(() => {
-            alert('Texto copiado al portapapeles');
+            addAlert("Texto copiado al portapapeles", "info")
         }).catch(err => {
             console.error('Error al copiar el texto: ', err);
+            addAlert("Error al copiar el texto", "error")
         });
     };
 
@@ -71,9 +72,10 @@ Bandwidth: ${data.bandwidth}
 
             await writable.write(fileContent)
             await writable.close()
-            alert('Archivo guardado exitosamente.')
+            addAlert("Archivo guardado exitosamente", "info")
         } catch (error) {
             console.error('Error al guardar el archivo:', error)
+            addAlert("Error al guardar el archivo", "error")
         }
     }
 

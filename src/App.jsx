@@ -22,6 +22,7 @@ import config from './amplifyconfiguration.json';
 import DataForm from './assets/DataForm/DataForm';
 
 import dump_data from './assets/DUMP_DATA/response_data.json'
+import AlertComponent from './assets/Alerts/AlertComponent';
 // import awsExports from './aws-exports'
 Amplify.configure(config);
 
@@ -42,6 +43,9 @@ const App = ({ signOut, user }) => {
   const [isFormActive, setIsFormActive] = useState(false);
   const [isDataFormActive, setIsDataFormActive] = useState(false);
   const [dataForm, setDataForm] = useState({})
+
+  //Alertas
+  const [alerts, setAlerts] = useState([])
 
   // useEffect(() => {
   //   async function fetchData() {
@@ -81,6 +85,28 @@ const App = ({ signOut, user }) => {
 
   const activateDataForm = () => setIsDataFormActive(true);
   const deactivateDataForm = () => setIsDataFormActive(false);
+
+  const addAlert = (text, variation) => {
+    const newAlert = { id: Date.now(), text, dismissed: false, variation }
+    setAlerts([...alerts, newAlert])
+
+    // Se quitaran despues de 5 segundos
+    setTimeout(() => {
+      dismissAlert(newAlert.id)
+    }, 5000)
+  }
+
+  const dismissAlert = (id) => {
+    setAlerts((prevAlerts) =>
+      prevAlerts.map((alert) =>
+        alert.id === id ? { ...alert, dismissed: true } : alert
+      )
+    )
+
+    setTimeout(() => {
+      setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== id))
+    }, 800);
+  }
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -189,17 +215,15 @@ const App = ({ signOut, user }) => {
           </div>
           {isFormActive && (
             <div className="form-overlay" onClick={handleOverlayClick}>
-              <FactiUnitaria handleDataForm={handleDataForm} onClose={deactivateForm} user={user} />
+              <FactiUnitaria handleDataForm={handleDataForm} onClose={deactivateForm} user={user} addAlert={addAlert} />
             </div>
           )}
           {isDataFormActive && (
             <div>
-              <DataForm data={dataForm} onClose={deactivateDataForm} />
+              <DataForm data={dataForm} onClose={deactivateDataForm} addAlert={addAlert} />
             </div>
           )}
-          {/* <Alert variation='success' heading='Hola' isDismissible={true} className='alert'>
-            Cool!
-          </Alert> */}
+          <AlertComponent alerts={alerts} onDismiss={dismissAlert} />
         </>
       )}
     </Authenticator>

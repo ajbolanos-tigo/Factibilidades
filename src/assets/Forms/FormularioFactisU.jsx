@@ -11,7 +11,7 @@ import { post } from 'aws-amplify/api';
 import "./styles.css"
 import { styles } from "./styles";
 
-const FactiUnitaria = ({ handleDataForm, onClose, user }) => {
+const FactiUnitaria = ({ handleDataForm, onClose, user, addAlert }) => {
 
     const [loading, setLoading] = useState(false);
     const validate = values => {
@@ -39,14 +39,17 @@ const FactiUnitaria = ({ handleDataForm, onClose, user }) => {
             // console.log(response)
             // console.log(response.item)
             setLoading(false)
+            addAlert("Factis realizada con exito", "success")
             onClose()
             handleDataForm(response.item)
             // console.log(response.item)
         } catch (e) {
             try {
                 console.error('POST call failed:', JSON.parse(e.response.body));
+                addAlert("POST call failed", "error")
             } catch (parseError) {
                 console.error('POST call failed, error parsing response:', e);
+                addAlert("POST call failed", "error")
             }
         }
     }

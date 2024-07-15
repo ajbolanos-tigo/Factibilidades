@@ -1,118 +1,121 @@
 /* App.css */
 
 body {
-    font-family: 'Lato', sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to bottom, #000008, #070769);
-    background-repeat: no-repeat;
-    background-size: 100% 100vh;
-    color: #000000;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .container {
-    background-color: white;
-    width: 840px;
-    height: 500px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    position: relative; /* Añadido para permitir el posicionamiento absoluto dentro del contenedor */
-  }
+  font-family: 'Lato', sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #000008, #070769);
+  background-repeat: no-repeat;
+  background-size: 100% 100vh;
+  color: #000000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  background-color: white;
+  width: 840px;
+  height: 500px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  /* Añadido para permitir el posicionamiento absoluto dentro del contenedor */
+}
+
 /* En tu archivo de estilos CSS (por ejemplo, App.css) */
 
-  .myElementWithBackground {
-    background-image: url('Logo_Tigo.svg'); /* Ajusta la ruta según la ubicación de tu imagen */
-    background-size:cover; /* Ajusta según tus preferencias */
-    width: 75px;
-    height: 54px;
-    position: relative;
-    top: -265px;
-    left: 370px;
-    /* Otros estilos para el elemento */
-  }
+.myElementWithBackground {
+  background-image: url('Logo_Tigo.svg');
+  /* Ajusta la ruta según la ubicación de tu imagen */
+  background-size: cover;
+  /* Ajusta según tus preferencias */
+  width: 75px;
+  height: 54px;
+  position: relative;
+  top: -265px;
+  left: 370px;
+  /* Otros estilos para el elemento */
+}
 
-  .button {
-    background-color: #396BB4;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 9px;
-    position: relative;
-  }
-  
-  .button:hover {
-    background-color: #000008;
-  }
-  
-  h2 {
-    font-size: 40px;
-    margin: 0; /* Ajusta el margen a 0 para eliminar el espacio predeterminado */
-    position: relative; /* Permite posicionamiento absoluto */
-    margin-top: 0.5em;
-  }
-  /* Otros estilos */
+.button {
+  background-color: #396BB4;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 9px;
+  position: relative;
+}
+
+.button:hover {
+  background-color: #000008;
+}
+
+h2 {
+  font-size: 40px;
+  margin: 0;
+  /* Ajusta el margen a 0 para eliminar el espacio predeterminado */
+  position: relative;
+  /* Permite posicionamiento absoluto */
+  margin-top: 0.5em;
+}
+
+/* Otros estilos */
 
 .file-input-label {
-    background-color: #396BB4;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 9px;
-    display: inline-block;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .file-input-label input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-  }
-  .file-input-label:hover
-  {
-    background-color: #000008;
-  }
+  background-color: #396BB4;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 9px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
 
-  body.loading {
-    overflow: hidden;
-  }
-  
-  .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
-  .loader-container {
-    width: 1000px; /* Ajusta según sea necesario */
-  }
-  
-  .amplify-image{
-    margin-top: 2em;
-  }
+.file-input-label input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
 
-  .alert{
-    position: absolute;
-    right: auto;
-    bottom: 5%;
-  }
+.file-input-label:hover {
+  background-color: #000008;
+}
+
+body.loading {
+  overflow: hidden;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loader-container {
+  width: 1000px;
+  /* Ajusta según sea necesario */
+}
+
+.amplify-image {
+  margin-top: 2em;
+}
