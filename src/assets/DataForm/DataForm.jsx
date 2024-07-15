@@ -13,29 +13,29 @@ const IconSave = () => {
 };
 
 const DataForm = ({ data, onClose }) => {
-    const copyToClipboard = () => {
-        const textToCopy = data.aprobado ? `
-                            --FACTIBILIAD REMOTO GPON-- ${data.mensaje}
-                            Busqueda producto:
-                            Latitud: ${data.latitude} Longitud: ${data.longitude}
-                            Bandwidth: ${data.bandwidth}
-                            MUFA PROPUESTA
-                            Mufa: ${data.mufa} ${data.nombre}
-                            Distancia al cliente: ${data.distanciaMetraje}
-                            olt: ${data.olt}
-                            frame: ${data.frame}
-                            slot: ${data.slot}
-                            port: ${data.port}
-                            remantente: ${data.remantente}
-                            Coordenadas [${data.mufa_lat}, ${data.mufa_long}]
-                            ${data.building === "yes" ? "Comentarios:\nMufa interna" : ""}
-                                    ` : `
-                            --FACTIBILIAD REMOTO GPON-- NO APROBADO
-                            Busqueda producto:
-                            Latitud: ${data.latitude} Longitud: ${data.longitude}
-                            Bandwidth: ${data.bandwidth}
-                        `;
+    const textToCopy = data.aprobado ? `
+                        --FACTIBILIAD REMOTO GPON-- ${data.mensaje}
+                        Busqueda producto:
+                        Latitud: ${data.latitude} Longitud: ${data.longitude}
+                        Bandwidth: ${data.bandwidth}
+                        MUFA PROPUESTA
+                        Mufa: ${data.mufa} ${data.nombre}
+                        Distancia al cliente: ${data.distanciaMetraje}
+                        olt: ${data.olt}
+                        frame: ${data.frame}
+                        slot: ${data.slot}
+                        port: ${data.port}
+                        remantente: ${data.remantente}
+                        Coordenadas [${data.mufa_lat}, ${data.mufa_long}]
+                        ${data.building === "yes" ? "Comentarios:\nMufa interna" : ""}
+                                ` : `
+                        --FACTIBILIAD REMOTO GPON-- NO APROBADO
+                        Busqueda producto:
+                        Latitud: ${data.latitude} Longitud: ${data.longitude}
+                        Bandwidth: ${data.bandwidth}
+                    `;
 
+    const copyToClipboard = () => {
         navigator.clipboard.writeText(textToCopy).then(() => {
             alert('Texto copiado al portapapeles');
         }).catch(err => {
@@ -44,7 +44,7 @@ const DataForm = ({ data, onClose }) => {
     };
 
     return (<>
-        <Card className="card">
+        <Card className="card_data_form">
             <Flex>
                 <ScrollView height="300px" width="550px" maxWidth="100%">
                     <Text fontSize="1.2em" style={styles.marginBottom}>--FACTIBILIAD REMOTO GPON-- {data.mensaje}</Text>
