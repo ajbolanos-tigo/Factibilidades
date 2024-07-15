@@ -78,7 +78,7 @@ const FactiUnitaria = ({ handleDataForm, onClose, user }) => {
         {loading && (
             <LoaderFactis />
         )}
-        <Card variation="elevated">
+        <Card variation="elevated" className="card">
             <form onSubmit={handleSubmit}>
                 <Flex direction="column" gap="small">
                     <div>

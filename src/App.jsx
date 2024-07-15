@@ -20,6 +20,8 @@ import { get } from 'aws-amplify/api';
 
 import config from './amplifyconfiguration.json';
 import DataForm from './assets/DataForm/DataForm';
+
+import dump_data from './assets/DUMP_DATA/response_data.json'
 // import awsExports from './aws-exports'
 Amplify.configure(config);
 
@@ -38,7 +40,7 @@ const App = ({ signOut, user }) => {
   const [downloading, setDownloading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isFormActive, setIsFormActive] = useState(false);
-  const [isDataFormActive, setIsDataFormActive] = useState(false);
+  const [isDataFormActive, setIsDataFormActive] = useState(true);
   const [dataForm, setDataForm] = useState({})
 
   // useEffect(() => {
@@ -192,7 +194,7 @@ const App = ({ signOut, user }) => {
           )}
           {isDataFormActive && (
             <div>
-              <DataForm data={dataForm} onClose={deactivateDataForm} />
+              <DataForm data={dump_data} onClose={deactivateDataForm} />
             </div>
           )}
           {/* <Alert variation='success' heading='Hola' isDismissible={true} className='alert'>

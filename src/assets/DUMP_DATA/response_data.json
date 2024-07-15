@@ -1,0 +1,23 @@
+{
+    "username": "alexis",
+    "createdAt": "2024-07-12T17:22:21.549Z",
+    "latitude": "14.601470",
+    "longitude": "-90.510154",
+    "building": "yes",
+    "bandwidth": "15",
+    "productType": "gpon",
+    "producto": "Fibertec 15Mbps",
+    "product_id": 873,
+    "aprobado": true,
+    "mensaje": "APROBADO",
+    "mufa": "50-48B3",
+    "nombre": "GUA0060012BF01319C18",
+    "mufa_lat": "14.60114100",
+    "mufa_long": "-90.51010600",
+    "olt": "gp.5603.obel.gua006.1",
+    "frame": "0",
+    "slot": "0",
+    "port": "12",
+    "remantente": "1005.76 Mbps",
+    "distanciaMetraje": 300
+}
