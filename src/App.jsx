@@ -40,7 +40,7 @@ const App = ({ signOut, user }) => {
   const [downloading, setDownloading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isFormActive, setIsFormActive] = useState(false);
-  const [isDataFormActive, setIsDataFormActive] = useState(true);
+  const [isDataFormActive, setIsDataFormActive] = useState(false);
   const [dataForm, setDataForm] = useState({})
 
   // useEffect(() => {
@@ -90,7 +90,7 @@ const App = ({ signOut, user }) => {
 
   const handleDataForm = obj => {
     setDataForm({ ...obj })
-    // activateDataForm()
+    activateDataForm()
     console.log(obj)
   }
 
@@ -194,7 +194,7 @@ const App = ({ signOut, user }) => {
           )}
           {isDataFormActive && (
             <div>
-              <DataForm data={dump_data} onClose={deactivateDataForm} />
+              <DataForm data={dataForm} onClose={deactivateDataForm} />
             </div>
           )}
           {/* <Alert variation='success' heading='Hola' isDismissible={true} className='alert'>

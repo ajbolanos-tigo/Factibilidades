@@ -14,26 +14,26 @@ const IconSave = () => {
 
 const DataForm = ({ data, onClose }) => {
     const textToCopy = data.aprobado ? `
-                        --FACTIBILIAD REMOTO GPON-- ${data.mensaje}
-                        Busqueda producto:
-                        Latitud: ${data.latitude} Longitud: ${data.longitude}
-                        Bandwidth: ${data.bandwidth}
-                        MUFA PROPUESTA
-                        Mufa: ${data.mufa} ${data.nombre}
-                        Distancia al cliente: ${data.distanciaMetraje}
-                        olt: ${data.olt}
-                        frame: ${data.frame}
-                        slot: ${data.slot}
-                        port: ${data.port}
-                        remantente: ${data.remantente}
-                        Coordenadas [${data.mufa_lat}, ${data.mufa_long}]
-                        ${data.building === "yes" ? "Comentarios:\nMufa interna" : ""}
-                                ` : `
-                        --FACTIBILIAD REMOTO GPON-- NO APROBADO
-                        Busqueda producto:
-                        Latitud: ${data.latitude} Longitud: ${data.longitude}
-                        Bandwidth: ${data.bandwidth}
-                    `;
+--FACTIBILIAD REMOTO GPON-- ${data.mensaje}
+Busqueda producto:
+Latitud: ${data.latitude} Longitud: ${data.longitude}
+Bandwidth: ${data.bandwidth}
+MUFA PROPUESTA
+Mufa: ${data.mufa} ${data.nombre}
+Distancia al cliente: ${data.distanciaMetraje}
+olt: ${data.olt}
+frame: ${data.frame}
+slot: ${data.slot}
+port: ${data.port}
+remanente: ${data.remantente}
+Coordenadas [${data.mufa_lat}, ${data.mufa_long}]
+${data.building === "yes" ? "Comentarios:\nMufa interna" : ""}
+        ` : `
+--FACTIBILIAD REMOTO GPON-- NO APROBADO
+Busqueda producto:
+Latitud: ${data.latitude} Longitud: ${data.longitude}
+Bandwidth: ${data.bandwidth}
+`;
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(textToCopy).then(() => {
@@ -42,6 +42,40 @@ const DataForm = ({ data, onClose }) => {
             console.error('Error al copiar el texto: ', err);
         });
     };
+
+    const saveToFile = async () => {
+        try {
+            const opts = {
+                types: [
+                    {
+                        description: 'Text file',
+                        accept: { 'text/plain': ['.txt'] }
+
+                    },
+                    {
+                        description: 'JSON file',
+                        accept: { 'application/json': ['.json'] }
+                    }
+                ]
+            }
+            const handle = await window.showSaveFilePicker(opts)
+            const writable = await handle.createWritable()
+
+            const fileFormat = handle.name.split('.').pop()
+            let fileContent
+            if (fileFormat === "json") {
+                fileContent = JSON.stringify(data, null, 2)
+            } else {
+                fileContent = textToCopy
+            }
+
+            await writable.write(fileContent)
+            await writable.close()
+            alert('Archivo guardado exitosamente.')
+        } catch (error) {
+            console.error('Error al guardar el archivo:', error)
+        }
+    }
 
     return (<>
         <Card className="card_data_form">
@@ -60,7 +94,7 @@ const DataForm = ({ data, onClose }) => {
                             <Text style={styles.left_align_text}>frame: {data.frame}</Text>
                             <Text style={styles.left_align_text}>slot: {data.slot}</Text>
                             <Text style={styles.left_align_text}>port: {data.port}</Text>
-                            <Text style={styles.left_align_text}>remantente: {data.remantente}</Text>
+                            <Text style={styles.left_align_text}>remanente: {data.remantente}</Text>
                             <Text style={styles.left_align_text}>Coordenadas [{data.mufa_lat}, {data.mufa_long}]</Text>
                             {data.building === "yes" && (
                                 <>
@@ -74,7 +108,7 @@ const DataForm = ({ data, onClose }) => {
                 </ScrollView>
                 <Flex direction="column" justifyContent="center" alignItems="center" alignContent="flex-start" wrap="nowrap" gap="1rem">
                     <Button variation="primary" onClick={copyToClipboard}>Copiar</Button>
-                    <Button gap="0.2rem">
+                    <Button gap="0.2rem" onClick={saveToFile}>
                         <IconSave /> Save
                     </Button>
                     <Button variation="primary" colorTheme="error" onClick={onClose}>Cerrar</Button>

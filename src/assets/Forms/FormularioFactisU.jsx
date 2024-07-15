@@ -60,10 +60,10 @@ const FactiUnitaria = ({ handleDataForm, onClose, user }) => {
         initialValues: {
             username: user.username,
             createdAt: '',
-            latitude: '14.601470',
-            longitude: '-90.510154',
+            latitude: '',
+            longitude: '',
             building: 'no',
-            bandwidth: '15',
+            bandwidth: '',
             productType: 'gpon',
         },
         validationSchema: formSchema,
