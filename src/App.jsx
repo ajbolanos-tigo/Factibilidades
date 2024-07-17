@@ -26,6 +26,11 @@ import AlertComponent from './assets/Alerts/AlertComponent';
 // import awsExports from './aws-exports'
 Amplify.configure(config);
 
+const VALID_FILE_TYPES = [
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-excel"
+]
+
 const doesFileExist = async (filename) => {
   try {
     const result = await list({
@@ -120,19 +125,39 @@ const App = ({ signOut, user }) => {
     console.log(obj)
   }
 
+  const verifyFileName = (file) => {
+    const { name: filename, type: fileType } = file
+
+    if (file && !VALID_FILE_TYPES.includes(fileType)) {
+      addAlert("Archivo no válido. Suba un archivo Excel", "error")
+      return false
+    }
+    if (filename.indexOf(' ') >= 0) {
+      addAlert("El archivo tiene espacios en el nombre", "error")
+      return false
+    }
+    if (filename.toLowerCase().includes('update')) {
+      addAlert("El archivo contiene update en el nombre", "error")
+      return false
+    }
+    return true
+  }
+
   const uploadDataInBrowser = async (event) => {
     if (event?.target?.files) {
       const file = event.target.files[0];
-      const filename = file.name;
+      if (!verifyFileName(file)) return
+
       try {
         setLoading(true); // Mostrar el loader al iniciar la carga
+        const filename = file.name
 
         await uploadData({
           key: filename,
           data: file,
         });
 
-        console.log('File uploaded successfully');
+        // console.log('File uploaded successfully');
         const updatedFilename = `${filename.split('.')[0]}_updated.xlsx`;
 
         while (!(await doesFileExist(updatedFilename))) {
@@ -151,9 +176,11 @@ const App = ({ signOut, user }) => {
         });
 
         window.location.href = getUrlResult.url.toString();
-        console.log(getUrlResult.url.toString());
+        // console.log(getUrlResult.url.toString());
+        addAlert("Factis realizada con exito", "success")
       } catch (error) {
         console.error('Error:', error);
+        addAlert("Error al subir el archivo", "error");
       } finally {
         setLoading(false); // Ocultar el loader al finalizar la carga
       }
@@ -201,7 +228,7 @@ const App = ({ signOut, user }) => {
                 </Button>
                 <label className="file-input-label">
                   Subir Archivo
-                  <input type="file" onChange={(event) => uploadDataInBrowser(event)} />
+                  <input type="file" accept=".xlsx, .xls" onChange={(event) => uploadDataInBrowser(event)} />
                 </label>
                 <Button className="button" onClick={activateForm}>
                   Factibilidades unitarias
