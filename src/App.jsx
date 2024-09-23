@@ -52,39 +52,6 @@ const App = ({ signOut, user }) => {
   //Alertas
   const [alerts, setAlerts] = useState([])
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const restOperation = get({
-  //         apiName: 'itemsFactis',
-  //         path: '/items'
-  //       });
-  //       const response = await restOperation.response;
-  //       // const reader = response.body.getReader();
-  //       // const { value } = await reader.read();
-  //       // const text = new TextDecoder("utf-8").decode(value);
-  //       // const data = JSON.parse(text);
-
-  //       // ...
-  //       const { body } = response;
-  //       // consume as a string:
-  //       // const str = await body.text();
-  //       // // OR consume as a blob:
-  //       // const blob = await body.blob();
-  //       // // OR consume as a JSON:
-  //       const json = await body.json();
-
-  //       console.log('GET call succeeded: ', response);
-  //       // console.log('GET call succeeded: ', str);
-  //       // console.log('GET call succeeded: ', blob);
-  //       console.log('GET call succeeded: ', json);
-  //     } catch (e) {
-  //       console.log('GET call failed: ', JSON.parse(e.response.body));
-  //     }
-  //   }
-  //   fetchData()
-  // }, [])
-
   const activateForm = () => setIsFormActive(true);
   const deactivateForm = () => setIsFormActive(false);
 
@@ -140,6 +107,11 @@ const App = ({ signOut, user }) => {
       addAlert("El archivo contiene update en el nombre", "error")
       return false
     }
+
+    if (filename.toLowerCase() === 'formato_proyectbi.xlsx') {
+      addAlert("El archivo no puede llamarse 'formato_proyectbi.xlsx'", "error")
+      return false
+    }
     return true
   }
 
@@ -157,32 +129,53 @@ const App = ({ signOut, user }) => {
           data: file,
         });
 
-        // console.log('File uploaded successfully');
+        console.log('Flile uploaded successfully');
         const updatedFilename = `${filename.split('.')[0]}_updated.xlsx`;
 
-        while (!(await doesFileExist(updatedFilename))) {
-          await sleep(10000);
-        }
+        const maxTimeout = 15 * 60 * 1000
+        const checkInterval = 10000
+        let elapsedTime = 0
 
-        console.log('File updated successfully');
+        const checkFile = setInterval(async () => {
+          try {
+            elapsedTime += checkInterval
+            if (elapsedTime >= maxTimeout) {
+              clearInterval(checkFile)
+              addAlert("Timeout de proceso de la factibilidad", "error");
+              setLoading(false)
+              return
+            }
 
-        const getUrlResult = await getUrl({
-          key: updatedFilename,
-          options: {
-            accessLevel: 'guest',
-            validateObjectExistence: false,
-            expiresIn: 20,
-          },
-        });
+            if (await doesFileExist(updatedFilename)) {
+              clearInterval(checkFile)
+              console.log('File update successfully')
 
-        window.location.href = getUrlResult.url.toString();
-        // console.log(getUrlResult.url.toString());
-        addAlert("Factis realizada con exito", "success")
+              const getUrlResult = await getUrl({
+                key: updatedFilename,
+                options: {
+                  accessLevel: 'guest',
+                  validateObjectExistence: false,
+                  expiresIn: 20,
+                },
+              });
+
+              window.location.href = getUrlResult.url.toString();
+              console.log(getUrlResult.url.toString());
+              addAlert("Factis realizada con exito", "success")
+              setLoading(false)
+
+            }
+          } catch (error) {
+            clearInterval(checkFile);
+            console.error('Error during file check:', error);
+            addAlert("Error al procesar el archivo", "error");
+            setLoading(false);
+          }
+        }, checkInterval)
       } catch (error) {
         console.error('Error:', error);
         addAlert("Error al subir el archivo", "error");
-      } finally {
-        setLoading(false); // Ocultar el loader al finalizar la carga
+        setLoading(false)
       }
     }
   };
@@ -191,13 +184,13 @@ const App = ({ signOut, user }) => {
 
   const downloadFormat = async (event) => {
     const getUrlResult = await getUrl({
-      key: 'formato_proyectbi.xlsx',
+      path: 'protected/formato_proyectbi.xlsx',
+
       options: {
-        accessLevel: 'guest',
-        validateObjectExistence: false,
+        validateObjectExistence: true,
         expiresIn: 60,
-      },
-    });
+      }
+    })
 
     window.location.href = getUrlResult.url.toString();
   };
