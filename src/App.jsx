@@ -23,6 +23,10 @@ import DataForm from './assets/DataForm/DataForm';
 
 import dump_data from './assets/DUMP_DATA/response_data.json'
 import AlertComponent from './assets/Alerts/AlertComponent';
+
+//Logo
+import Logo from './Logo_Tigo.svg'
+
 // import awsExports from './aws-exports'
 Amplify.configure(config);
 
@@ -205,7 +209,7 @@ const App = ({ signOut, user }) => {
             )}
             <Image
               alt="Tigo logo"
-              src="src/Logo_Tigo.svg"
+              src={Logo}
               objectFit="initial"
               objectPosition="50% 50%"
               backgroundColor="initial"
