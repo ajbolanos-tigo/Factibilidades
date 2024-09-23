@@ -47,9 +47,13 @@ const FactiUnitaria = ({ handleDataForm, onClose, user, addAlert }) => {
             try {
                 console.error('POST call failed:', JSON.parse(e.response.body));
                 addAlert("POST call failed", "error")
+                setLoading(false)
+
             } catch (parseError) {
                 console.error('POST call failed, error parsing response:', e);
                 addAlert("POST call failed", "error")
+                setLoading(false)
+
             }
         }
     }
